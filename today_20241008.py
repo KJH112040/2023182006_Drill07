@@ -35,13 +35,17 @@ class Ball:
     def __init__(self):
         self.x, self.y = random.randint(10, 700), 599
         self.speed = random.randint(10, 50)
-        random_size = random.randint(0, 1)
-        if random_size == 0:
+        self.random_size = random.randint(0, 1)
+        if self.random_size == 0:
             self.image = load_image('ball21x21.png')
         else:
             self.image = load_image('ball41x41.png')
     def update(self):
-        if self.y > 40: self.y -= self.speed
+        self.y -= self.speed
+        if self.y < 80 and self.random_size==1:
+            self.y = 80
+        elif self.y < 70 and self.random_size==0:
+            self.y = 70
     def draw(self):
         self.image.draw(self.x,self.y)
 
@@ -80,7 +84,13 @@ def render_world():
     pass
 
 def handle_events():
-    running = False
+    global running
+    events = get_events()
+    for event in events:
+        if event.type == SDL_QUIT:
+            running = False
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+            running = False
 
 open_canvas()
 
